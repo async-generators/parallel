@@ -1,0 +1,77 @@
+{
+  "name": "@async-generators/parallel",
+  "description": "execute an async transform and yield in order of completion",
+  "version": "0.1.0",
+  "author": {
+    "name": "Meirion Hughes",
+    "email": "crakinshot@yahoo.com",
+    "url": "https://github.com/MeirionHughes"
+  },
+  "keywords": [
+    "map",
+    "select",
+    "async",
+    "iterator",
+    "generator",
+    "esnext",
+    "typescript",
+    "linq"
+  ],
+  "license": "MIT",
+  "main": "./dist/commonjs/index.js",
+  "typings": "./dist/commonjs/index.d.ts",
+  "module": "./dist/es2015/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/async-generators/parallel.git"
+  },
+  "bugs": {
+    "url": "https://github.com/async-generators/parallel/issues"
+  },
+  "dependencies": {
+    "@async-generators/iterable": "^0.2.0",
+    "events": "^1.1.1"
+  },
+  "devDependencies": {
+    "@async-generators/equal": "^0.4.0",
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^8.0.28",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "codecov": "^2.3.0",
+    "mocha": "^3.5.3",
+    "nyc": "^11.2.1",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.2"
+  },
+  "scripts": {
+    "test": "nyc node_modules/mocha/bin/mocha --harmony-async-iteration --require source-map-support/register --compilers ts:ts-node/register test/*.ts",
+    "build": "npm run build:commonjs && npm run build:es2015",
+    "build:commonjs": "tsc --project tsconfig.build.json --rootDir src/ --outDir ./dist/commonjs",
+    "build:es2015": "tsc --project tsconfig.build.json --rootDir src/ --outDir ./dist/es2015 --module es2015",
+    "cover": "codecov"
+  },
+  "engines": {
+    "node": ">=8.5.0"
+  },
+  "nyc": {
+    "exclude": [
+      "node_modules/",
+      "test/",
+      "coverage/"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "lcov"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
+}
