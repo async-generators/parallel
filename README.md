@@ -27,9 +27,9 @@ Additionally, the `module` entry points to a `es2015` distribution, which can be
 
 <code>parallel()</code> iterates `source` and executes `selector(item, index)` concurrently. Upon resolution of selector promise, the result is yielded. 
 
-`selector()` is awaited in a non-blocking fashion and the result is yields in the order of completion. If the the number of concurrent tasks is greater-than or equal-to `limit` further iteration of `source` is halted until other tasks complete. Upon halting, the `limited(item, index)` method is called (sync). If `limited` returns `true` the item is ignored not _not_ called with `selector`
+`selector()` is awaited in a non-blocking fashion and the results are yielded in the order of completion. If the the number of concurrent tasks is greater-than or equal-to `limit` further iteration of `source` is halted until other tasks complete. Upon halting, the `limited(item, index)` method is called (sync). If `limited` returns `true` the item is ignored not _not_ passed to   `selector`
 
-`source` must have a `[Symbol.asyncIterator]` or `[Symbol.iterator]` property. If both are present only `[Symbol.asyncIterator]` is used. Each time the `limit` is hit a call to `limited(item, index)`  
+`source` must have a `[Symbol.asyncIterator]` or `[Symbol.iterator]` property. If both are present only `[Symbol.asyncIterator]` is used. 
 
 ## Example
 
