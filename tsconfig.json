@@ -4,6 +4,7 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "noUnusedLocals": true,
+    "noEmitOnError": true,
     "lib": [
       "dom",
       "es2017",

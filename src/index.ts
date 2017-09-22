@@ -1,13 +1,12 @@
 import iterable from '@async-generators/iterable';
 import * as EventEmitter from 'events';
 
-export default async function* <T, R=T>(
+async function* parallel<T, R=T>(
   source: AsyncIterable<T> | Iterable<T>,
   selector: (value: T, index: number) => Promise<R> | R,
-  limit: number = 3,
-  limited: (item:T, index: number) => boolean | void = undefined,
+  limit: number,
+  limited: (item: T, index: number) => boolean | void,
 ): AsyncIterable<R> {
-
   let it = iterable(source);
   let index = 0;
   let concurrent = 0;
@@ -24,7 +23,7 @@ export default async function* <T, R=T>(
           await new Promise(_ => { signal.once("next", _); })
         }
         consumed += 1;
-        concurrent++;
+        concurrent += 1;;
         let $selector: any = selector(item, index);
 
         if ($selector instanceof Promise === false) {
@@ -33,7 +32,7 @@ export default async function* <T, R=T>(
 
         $selector.catch(x)
           .then((result) => {
-            concurrent--;
+            concurrent -= 1;
             results.push(item);
             signal.emit("next");
           });
@@ -62,4 +61,49 @@ export default async function* <T, R=T>(
     }
   } while (produced < consumed);
   await consumer;
+}
+
+
+export default function <T, R>(
+  source: AsyncIterable<T> | Iterable<T>,
+  selector: (value: T, index: number) => Promise<R> | R,
+  limit: number,
+  limited: (item: T, index: number) => boolean | void,
+): AsyncIterable<R>
+export default function <T, R>(
+  source: AsyncIterable<T> | Iterable<T>,
+  selector: (value: T, index: number) => Promise<R> | R,
+  limit: number
+): AsyncIterable<R>
+export default function <T, R>(
+  source: AsyncIterable<T> | Iterable<T>,
+  selector: (value: T, index: number) => Promise<R> | R
+): AsyncIterable<R>
+export default function <T>(
+  source: AsyncIterable<Promise<T>> | Iterable<Promise<T>>,
+): AsyncIterable<T>
+export default function <T>(
+  source: AsyncIterable<Promise<T>> | Iterable<Promise<T>>,
+  limit: number
+): AsyncIterable<T>
+export default function <T, R=T>(
+  source: AsyncIterable<Promise<T>> | Iterable<Promise<T>>,
+  selector?: any,
+  limit?: any,
+  limited?: any,
+): AsyncIterable<R> {
+
+  if (typeof selector == "number") {
+    limited = limit;
+    limit = selector;
+    selector = async (x) => await x;
+  } else if (typeof selector == "undefined") {
+    selector = async (x) => await x;
+  }
+
+  if (limit === undefined) {
+    limit = 20;
+  }
+
+  return parallel(source, selector, limit, limited)
 }
