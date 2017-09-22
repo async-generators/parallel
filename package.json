@@ -1,7 +1,7 @@
 {
   "name": "@async-generators/parallel",
   "description": "execute an async transform and yield in order of completion",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Meirion Hughes",
     "email": "crakinshot@yahoo.com",
